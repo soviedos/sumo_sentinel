@@ -23,4 +23,3 @@ models/converted/
 *.tar.gz
 
 # VSCode settings
-.vscode/

@@ -1,7 +1,6 @@
-train: ../train/images
-val: ../valid/images
-test: ../test/images
-
+train: ../datasets/dojo/images/train
+val: ../datasets/dojo/images/val
+test: ../datasets/dojo/images/test
 nc: 1
 names: ['dojo']
 

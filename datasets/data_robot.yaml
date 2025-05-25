@@ -1,7 +1,6 @@
-train: ../train/images
-val: ../valid/images
-test: ../test/images
-
+train: ../datasets/robot/images/train
+val: ../datasets/robot//images/val
+test: ../datasets/robot/images/test
 nc: 1
 names: ['SumoBots']
 

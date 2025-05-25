@@ -8,3 +8,7 @@ pycocotools
 tensorflow
 onnx
 onnx-tf
+tqdm
+PyYAML
+seaborn
+pandas
