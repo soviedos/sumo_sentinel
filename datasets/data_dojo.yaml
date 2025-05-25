@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['dojo']
+
+roboflow:
+  workspace: soviedos
+  project: sumo_sentinel
+  version: 1
+  license: MIT
+  url: https://universe.roboflow.com/soviedos/sumo_sentinel/dataset/1

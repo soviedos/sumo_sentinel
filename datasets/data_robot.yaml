@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['SumoBots']
+
+roboflow:
+  workspace: soviedos
+  project: eagle_eye-ajivh
+  version: 3
+  license: MIT
+  url: https://universe.roboflow.com/soviedos/eagle_eye-ajivh/dataset/3
