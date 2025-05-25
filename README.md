@@ -170,7 +170,7 @@ test: ../datasets/dojo/images/test
 
 ## 📄 Licencia
 
-MIT © 2025 Sergio Oviedo Seas
+GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 © Sergio Oviedo Seas
 
 ---
 
