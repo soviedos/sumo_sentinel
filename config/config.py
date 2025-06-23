@@ -38,3 +38,13 @@ S_MIN = 0
 S_MAX = 30
 V_MIN = 200
 V_MAX = 255
+
+# ==== Tamaño del Kernel para filtro morfológico ====
+
+KERNEL_SIZE = 5  # Tamaño del kernel para operaciones morfológicas
+
+# ==== Valores fijos recomendados para el filtro bilateral ====
+
+PIXEL_NEIGHBORS = 9  # Vecindario de píxeles para el filtro bilateral
+SIGMACOLOR = 75  # Sigma para el filtro bilateral
+SIGMASPACE = 75  # Sigma para el filtro bilateral
