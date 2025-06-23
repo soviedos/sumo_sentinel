@@ -9,6 +9,9 @@ import cv2
 import numpy as np
 from sumo_sentinel.ui.futuristic_controls import FuturisticScale  # archivo separado
 from sumo_sentinel.business.dojo_detector_filters import DojoFilters as df
+from sumo_sentinel.business.dojo_detector_canny import detectar_dojo_canny as dd_canny
+from sumo_sentinel.business.dojo_detector_findContour import procesar_dojo_findContours as dd_findContours
+from sumo_sentinel.business.dojo_detector_hough import detectar_dojo_hough as dd_hough
 class SumoSentinelCameraApp:
     def __init__(self, root):
         self.root = root
@@ -142,6 +145,48 @@ class SumoSentinelCameraApp:
         update_toggle_style(self.toggle7, self.toggle_var7)
         update_toggle_style(self.toggle8, self.toggle_var8)
 
+        # --- NUEVO GRUPO DE TOGGLES: Algoritmos de detección del dojo ---
+        self.dojo_detection_frame = tk.Frame(root, bg="black")
+        self.dojo_detection_frame.pack(pady=10)
+
+        self.dojo_detection_title = Label(self.dojo_detection_frame, text="Algoritmos de detección del dojo", font=("Arial", 12), fg="cyan", bg="black")
+        self.dojo_detection_title.grid(row=0, column=0, columnspan=3, pady=(0, 8))
+
+        self.dojo_detection_var1 = tk.BooleanVar(value=False)
+        self.dojo_detection_var2 = tk.BooleanVar(value=False)
+        self.dojo_detection_var3 = tk.BooleanVar(value=False)
+
+        self.dojo_detection1 = tk.Checkbutton(self.dojo_detection_frame, text="Hough", variable=self.dojo_detection_var1,
+                                         onvalue=True, offvalue=False, font=("Orbitron", 10),
+                                         bg="white", fg="black", activebackground="white", activeforeground="black")
+        self.dojo_detection1.grid(row=1, column=0, padx=8, sticky="ew")
+
+        self.dojo_detection2 = tk.Checkbutton(self.dojo_detection_frame, text="Contornos", variable=self.dojo_detection_var2,
+                                         onvalue=True, offvalue=False, font=("Orbitron", 10),
+                                         bg="white", fg="black", activebackground="white", activeforeground="black")
+        self.dojo_detection2.grid(row=1, column=1, padx=8, sticky="ew")
+
+        self.dojo_detection3 = tk.Checkbutton(self.dojo_detection_frame, text="Canny", variable=self.dojo_detection_var3,
+                                         onvalue=True, offvalue=False, font=("Orbitron", 10),
+                                         bg="white", fg="black", activebackground="white", activeforeground="black")
+        self.dojo_detection3.grid(row=1, column=2, padx=8, sticky="ew")
+
+        # Estilo para los toggles de algoritmos
+        def update_dojo_detection_style(toggle, var):
+            if var.get():
+                toggle.config(bg="deepskyblue", fg="black", activebackground="deepskyblue", activeforeground="black")
+            else:
+                toggle.config(bg="white", fg="black", activebackground="white", activeforeground="black")
+
+        self.dojo_detection1.config(command=lambda: update_dojo_detection_style(self.dojo_detection1, self.dojo_detection_var1))
+        self.dojo_detection2.config(command=lambda: update_dojo_detection_style(self.dojo_detection2, self.dojo_detection_var2))
+        self.dojo_detection3.config(command=lambda: update_dojo_detection_style(self.dojo_detection3, self.dojo_detection_var3))
+
+        update_dojo_detection_style(self.dojo_detection1, self.dojo_detection_var1)
+        update_dojo_detection_style(self.dojo_detection2, self.dojo_detection_var2)
+        update_dojo_detection_style(self.dojo_detection3, self.dojo_detection_var3)
+        # --- FIN NUEVO GRUPO DE TOGGLES ---
+
         # Iniciar cámara
         self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
@@ -194,8 +239,21 @@ class SumoSentinelCameraApp:
 
             # Filtro 8: Desenfoque Gaussiano
             if self.toggle_var8.get():
-                # Aquí puedes agregar otro filtro personalizado
                 frame_procesada = df.desenfoque_gaussiano(frame_procesada, (cfg.KERNEL_SIZE, cfg.KERNEL_SIZE))  
+
+            # --- Algoritmos de detección del dojo ---
+            # Hough
+            if self.dojo_detection_var1.get():
+                # Suponiendo que el método se llama detectar_hough y retorna una imagen
+                frame_procesada = dd_hough(frame_procesada)
+            # Contornos
+            if self.dojo_detection_var2.get():
+                # Suponiendo que el método se llama detectar_contornos y retorna una imagen
+                frame_procesada = dd_findContours(frame_procesada)
+            # Canny
+            if self.dojo_detection_var3.get():
+                # Suponiendo que el método se llama detectar_canny y retorna una imagen
+                frame_procesada, center, radius = dd_canny(frame_procesada)
 
             # Mostrar imagen original
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -206,6 +264,9 @@ class SumoSentinelCameraApp:
 
             # Mostrar máscara procesada
             mask_rgb = frame_procesada
+            # Si la imagen es de un canal, convertir a RGB para mostrar
+            if len(mask_rgb.shape) == 2:
+                mask_rgb = cv2.cvtColor(mask_rgb, cv2.COLOR_GRAY2RGB)
             mask_img = Image.fromarray(mask_rgb)
             mask_tk = ImageTk.PhotoImage(image=mask_img)
             self.mask_label.imgtk = mask_tk

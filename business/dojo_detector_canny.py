@@ -32,3 +32,9 @@ def detectar_dojo_canny(frame):
     radius = int(radius)
 
     # 5. Dibujar resultados para visualización
+    resultado = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+    cv2.drawContours(resultado, [mayor], -1, (0, 255, 0), 2)
+    #cv2.circle(resultado, center, radius, (0, 0, 255), 2)
+    cv2.circle(resultado, center, 3, (255, 0, 0), -1)
+
+    return resultado, center, radius
