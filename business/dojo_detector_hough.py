@@ -8,8 +8,8 @@ def detectar_dojo_hough(frame):
     else:
         gray = frame.copy()
 
-    # Aplicar un umbral para aislar áreas blancas
-    _, mask = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
+    # Aplicar un umbral para aislar áreas blancas (ajustar valor si es necesario)
+    _, mask = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY)
 
     # Suavizar para reducir ruido
     mask = cv2.medianBlur(mask, 7)
@@ -23,7 +23,7 @@ def detectar_dojo_hough(frame):
         param1=100,
         param2=30,
         minRadius=50,
-        maxRadius=0
+        maxRadius=300  # Ajusta este valor según el tamaño esperado del dojo
     )
 
     resultado = frame.copy()

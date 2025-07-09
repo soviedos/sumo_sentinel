@@ -9,7 +9,8 @@ CONF_THRESHOLD = 0.5  # confianza mínima para detección válida
 IOU_THRESHOLD = 0.5   # umbral de IoU si se compara superposición
 
 # ==== Colores BGR ====
-COLOR_DOJO_CONTOUR = (0, 255, 255)    # amarillo
+COLOR_DOJO_CONTOUR = (255, 0, 0)    # amarillo (RGB)
+COLOR_DOJO_CENTER = (255, 255, 0)       # rojo (RGB)
 COLOR_ROBOT_INSIDE = (0, 255, 255)    # amarillo
 COLOR_ROBOT_OUTSIDE = (0, 0, 255)     # rojo
 COLOR_ROBOT_LOST = (100, 100, 100)    # gris oscuro
@@ -47,4 +48,9 @@ KERNEL_SIZE = 5  # Tamaño del kernel para operaciones morfológicas
 
 PIXEL_NEIGHBORS = 9  # Vecindario de píxeles para el filtro bilateral
 SIGMACOLOR = 75  # Sigma para el filtro bilateral
-SIGMASPACE = 75  # Sigma para el filtro bilateral
+SIGMASPACE = 75  # Sigma para el filtro bilaterail
+
+# ==== Canny Threshold values ====
+
+UPPER_THRESHOLD = 200  # Umbral superior para Canny
+LOWER_THRESHOLD = 100  # Umbral inferior para Canny

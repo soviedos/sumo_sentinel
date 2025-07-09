@@ -207,6 +207,10 @@ class SumoSentinelCameraApp:
 
             frame_procesada = cv2.resize(frame, (cfg.FRAME_WIDTH, cfg.FRAME_HEIGHT))
 
+            contorno = None
+            center = None
+            radius = None
+
             # Filtro 1: Ajuste de brillo y contraste
             if self.toggle_var1.get():
                 frame_procesada = df.ajustar_brillo_contraste(frame_procesada, brillo, contraste)
@@ -249,14 +253,14 @@ class SumoSentinelCameraApp:
             # Contornos
             if self.dojo_detection_var2.get():
                 # Suponiendo que el método se llama detectar_contornos y retorna una imagen
-                frame_procesada = dd_findContours(frame_procesada)
+                frame_procesada, center, radius, contorno = dd_findContours(frame_procesada)               
             # Canny
             if self.dojo_detection_var3.get():
                 # Suponiendo que el método se llama detectar_canny y retorna una imagen
-                frame_procesada, center, radius = dd_canny(frame_procesada)
+                frame_procesada, center, radius, contorno = dd_canny(frame_procesada)
 
-            # Mostrar imagen original
-            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            # Mostrar imagen original directamente de la cámara (sin procesamiento)
+            rgb = cv2.cvtColor(self.frame_original, cv2.COLOR_BGR2RGB)
             img = Image.fromarray(rgb)
             imgtk = ImageTk.PhotoImage(image=img)
             self.image_label.imgtk = imgtk
@@ -267,6 +271,17 @@ class SumoSentinelCameraApp:
             # Si la imagen es de un canal, convertir a RGB para mostrar
             if len(mask_rgb.shape) == 2:
                 mask_rgb = cv2.cvtColor(mask_rgb, cv2.COLOR_GRAY2RGB)
+
+            # 5. Dibujar resultados para visualización
+            if contorno is not None:
+                cv2.drawContours(mask_rgb, [contorno], -1, (cfg.COLOR_DOJO_CENTER), 2)
+            if center is not None:
+                # center debe ser una tupla de enteros
+                center_int = (int(center[0]), int(center[1]))
+                cv2.circle(mask_rgb, center_int, 2, cfg.COLOR_DOJO_CONTOUR, -1)
+                # Si quieres dibujar el círculo del radio:
+                # cv2.circle(mask_rgb, center_int, int(radius), (0, 0, 255), 2)
+
             mask_img = Image.fromarray(mask_rgb)
             mask_tk = ImageTk.PhotoImage(image=mask_img)
             self.mask_label.imgtk = mask_tk
